@@ -1,4 +1,6 @@
 old
+test/*
+git_notes
 old/*
 cache/*
 connect.php

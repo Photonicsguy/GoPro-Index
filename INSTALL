@@ -1,0 +1,11 @@
+
+Installing
+
+1. Create MySQL database
+	Template is located in install/gopro_V2.sql
+
+2. Rename connect.php.setup to connect.php
+
+2b. Edit connect.php, Enter hostname/username/password as well as fileCache location
+
+3.
