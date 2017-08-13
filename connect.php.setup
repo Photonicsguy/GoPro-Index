@@ -1,0 +1,16 @@
+<?php
+# FileName="connect.php"
+
+
+const hostname="localhost";		# Specify Hostname
+const database="gopro";
+const username="";		# Specify username
+const password="";		# Specify password
+
+
+
+
+const GoProPath="/path/to/GoPro/Videos";		# Path to original GoPro Video files
+const fileCache="/path/to/GoPro-Index/cache";	# Path to file cache (Thumbs, low res, etc...)
+
+?>
