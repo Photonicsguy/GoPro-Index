@@ -63,19 +63,22 @@ die;
         
         #$query="UPDATE `scanner`.`gopro` SET `location` = 'location', `name` = 'myname', `description` = 'mytest_desc', `meta` = 'meta', `star` = '2' WHERE `gopro`.`ID` = '{$id}';";
         #$sql_orig="UPDATE `scanner`.`gopro` SET `name` = '{$name}', `description` = '{$desc}', `meta` = '{$tags}' WHERE `gopro`.`ID` = '{$id}';";
-        $sql="UPDATE `scanner`.`gopro` SET `name` = ?, `description` = ?, `meta` = ? WHERE `gopro`.`ID` = ?;";
+        $sql="UPDATE `file` SET `name` = ?, `description` = ?, `meta` = ? WHERE `file`.`id` = ?;";
         $stmt = mysqli_prepare($connect,$sql);
         $stmt->bind_param('ssss', $name,$desc,$meta,$id);
-        if (mysqli_execute($stmt)) {
-            # Success!
+		if (mysqli_execute($stmt)) {
+			# Success!
+			$data['success'] = true;
+            $data['message'] = '';
+            $data['id']=$id;
         }else {
             $errors['sql'] = "SQL Error! " . mysqli_error($connect);
             $data['success'] = false;
             $data['errors']  = $errors;
             $data['message'] = 'Error!';
-            $data['ID']=$id;
-	echo json_encode($data);
-    die;        
+            $data['id']=$id;
+#	echo json_encode($data);
+#    die;        
 
         }
         $sql=$connect->real_escape_string($sql);
@@ -90,9 +93,6 @@ die;
 #            $query=print_r($_POST,TRUE);
             file_put_contents("/tmp/log",$querylog,FILE_APPEND);
  */
-		$data['success'] = true;
-        $data['message'] = 'Success!';
-        $data['id']=$id;
 	}
 
 	// return all our data to an AJAX call

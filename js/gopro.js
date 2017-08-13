@@ -1,3 +1,4 @@
+// Cookies Stuff
 var n = new Date();
 var expiresValue= new Date(n.getFullYear()+1, n.getMonth(), n.getDate());
     // this will set the expiration to 12 months
@@ -10,12 +11,54 @@ var app = angular.module('GoPro-IndexApp', ['ngCookies','ngInputModified']);
   }])
 
 
+	app.directive('strip', function() {
+
+    return {
+        restrict: 'E',
+		priority: 1010,
+        replace: true,
+        template: function(tElement, tAttrs) {
+            console.log("Frames: "+tAttrs.frames);
+            
+            var id=tAttrs.id;
+            var div='<div class="col-lg-4 mediabox" style="overflow:hidden;height:200px;width:355px;padding:0" ng-mouseleave="Mleave($event)" ng-mousemove="captureCoordinate($event)"><img id="img_'+id+'" ng-src="cache/'+id+'_strip.jpg" style="position: absolute; cursor: pointer; left: -5340px;"><div id="slider_'+id+'" style="width: 2px; height: 100%; background: rgb(221, 221, 221); position: absolute; top: 0px; opacity: 0.6; cursor: pointer; left: 340px; display: none;">';
+            return div;
+        },
+        transclude: true,
+    };
+});
+
     app.controller('listCtrl', function($scope, $http, $cookies) {
     $http.get("json.php").then(function (response) {
 		$scope.json = response.data;
 		$scope.jsonorig = response.data;
 		
 	});
+
+		$scope.captureCoordinate = function($event) {
+            //console.log($event);
+            var id=$event.currentTarget.id;
+            var left=$event.x-$event.currentTarget.offsetLeft;
+            var pos=left/($event.currentTarget.clientWidth-1);
+//            if(!$("#slider_"+id).length>0) {   // Check to see if slider exists
+        $("#slider_"+id).show().css('left', left - 1)
+//        console.log(left+"    Position: "+Math.round(pos*1000)/10+"%");
+        var width=$("#img_"+id).width();
+        var frames=60;
+        //var frame=Math.floor(pos*frames);
+        var ipos=-Math.floor(pos*frames) * (width/frames);
+//        console.log("Width: "+width+", Pos: "+pos+", Frames: "+frames+", Frame: "+frame+", Calc: "+ipos);
+        $("#img_"+id).css('left',ipos);
+            
+    };
+        $scope.Mleave = function($event) {
+            var id=$event.currentTarget.id;
+            $("#slider_"+id).hide();
+        $("#img_"+id).css('left',-$("#img_"+id).width()/4);
+
+        };
+
+
 
 	// Format Duration, Either "2h23m15s", "23m15s", or "15s"
     $scope.FormatDuration = function(duration){
@@ -86,10 +129,29 @@ this.on('timeupdate', function () {
 });
     };
 
+
+
+
+
     });
 
 
 (function($) {
+$(".mediabox").each(function(index,elm) {
+            var id=elm.id
+            console.log("Init ID: "+id);
+            $('<div id="slider_'+id+'"/>').hide().css({
+                    'width': '2px',
+                    'height': '100%',
+                    'background': '#ddd',
+                    'position': 'absolute',
+                    'z-ndex': '1',
+                    'top': '0',
+                    'opacity': 0.6,
+                    'cursor': 'pointer'
+                }).appendTo(elm);
+        });
+
         $.fn.videoPreview = function(options) {
             return this.each(function() {
                 var elm = $(this);

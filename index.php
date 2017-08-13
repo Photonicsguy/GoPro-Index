@@ -58,7 +58,13 @@ print $nav;
 <div class="col-lg-4 mediabox" ng-click="showVideo(x.id)">
 <!--    <span id="video_{{x.id}}" class="" style="display:none">_video here_</span><span id="preview_{{x.id}}"><p class="video-preview" data-frames="60" style="height:200px" data-source="{{ x.files.strip }}"></p></span>
 -->
-<img ng-src="{{ x.files.thumb }}">
+<!-- Plain thumbnail -- <img ng-src="{{ x.files.thumb }}"> -->
+
+<!-- FilmStrip -->
+<strip id="{{x.id}}" frames=60></strip>
+
+
+
 </div>
 <div class="col-lg-4" ng-hidden>{{video}}</div>
 <div class="debug col-lg-8">
@@ -89,8 +95,7 @@ print $nav;
 <!--Container end-->
 </div>
 
-<pre>json.vid = {{json.vid | json}}</pre>
-<pre>master = {{master | json}}</pre>
+<!-- <pre>json.vid = {{json.vid | json}}</pre> -->
 
 
 <script src="js/ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
@@ -111,6 +116,7 @@ print $nav;
    <!-- <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script> -->
 <script src="js/cdn.rawgit.com/erasche/videojs-framebyframe/c9dd2b6bf0e7b527aa505d0e9e19ffe756eb1ee5/video-framebyframe.js"></script>
 <script src="js/gopro.js"></script>
+
 <script>
 
 $(document).ready(function() {
