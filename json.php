@@ -1,7 +1,7 @@
 <?PHP
 @include('connect.php');
 $skip=0;
-$limit=10;
+$limit=50;
 
 if(!isset($_SERVER["SCRIPT_URL"]) OR $_SERVER["SCRIPT_URL"]=="/GoPro/json.php") {
     $mode="list";

@@ -12,16 +12,14 @@ var app = angular.module('GoPro-IndexApp', ['ngCookies','ngInputModified']);
 
 
 	app.directive('strip', function() {
-
     return {
         restrict: 'E',
-		priority: 1010,
         replace: true,
         template: function(tElement, tAttrs) {
             console.log("Frames: "+tAttrs.frames);
             
             var id=tAttrs.id;
-            var div='<div class="col-lg-4 mediabox" style="overflow:hidden;height:200px;width:355px;padding:0" ng-mouseleave="Mleave($event)" ng-mousemove="captureCoordinate($event)"><img id="img_'+id+'" ng-src="cache/'+id+'_strip.jpg" style="position: absolute; cursor: pointer; left: -5340px;"><div id="slider_'+id+'" style="width: 2px; height: 100%; background: rgb(221, 221, 221); position: absolute; top: 0px; opacity: 0.6; cursor: pointer; left: 340px; display: none;">';
+            var div='<div class="col-lg-4 mediabox" style="overflow:hidden;height:200px;width:355px;padding:0" ng-mouseleave="Mleave($event)" ng-mousemove="captureCoordinate($event)"><img id="img_'+id+'" ng-src="cache/'+id+'_strip.jpg" style="position: absolute; cursor: pointer; left: -5325px;"><div id="slider_'+id+'" style="width: 2px; height: 100%; background: rgb(221, 221, 221); position: absolute; top: 0px; opacity: 0.6; cursor: pointer; left: 340px; display: none;">';
             return div;
         },
         transclude: true,
@@ -36,16 +34,16 @@ var app = angular.module('GoPro-IndexApp', ['ngCookies','ngInputModified']);
 	});
 
 		$scope.captureCoordinate = function($event) {
-            //console.log($event);
             var id=$event.currentTarget.id;
-            var left=$event.x-$event.currentTarget.offsetLeft;
-            var pos=left/($event.currentTarget.clientWidth-1);
-//            if(!$("#slider_"+id).length>0) {   // Check to see if slider exists
-        $("#slider_"+id).show().css('left', left - 1)
-//        console.log(left+"    Position: "+Math.round(pos*1000)/10+"%");
+			var rect = $event.currentTarget.getBoundingClientRect();
+            var left=$event.x-rect.left;
+            var pos=left/($event.currentTarget.clientWidth);
+
+	        $("#slider_"+id).show().css('left', left-1 )
         var width=$("#img_"+id).width();
         var frames=60;
-        //var frame=Math.floor(pos*frames);
+		if(pos<0)pos=0;		//FIXME
+        var frame=Math.floor(pos*frames);
         var ipos=-Math.floor(pos*frames) * (width/frames);
 //        console.log("Width: "+width+", Pos: "+pos+", Frames: "+frames+", Frame: "+frame+", Calc: "+ipos);
         $("#img_"+id).css('left',ipos);
@@ -122,91 +120,13 @@ videojs("vid_" + id).ready(function(){
         myPlayer.currentTime(seek);
         seek=null;
     }
-this.on('timeupdate', function () {
+/*this.on('timeupdate', function () {
       //$('#time').text(this.currentTime());
-    })
+    })*/
 
 });
     };
 
 
-
-
-
     });
-
-
-(function($) {
-$(".mediabox").each(function(index,elm) {
-            var id=elm.id
-            console.log("Init ID: "+id);
-            $('<div id="slider_'+id+'"/>').hide().css({
-                    'width': '2px',
-                    'height': '100%',
-                    'background': '#ddd',
-                    'position': 'absolute',
-                    'z-ndex': '1',
-                    'top': '0',
-                    'opacity': 0.6,
-                    'cursor': 'pointer'
-                }).appendTo(elm);
-        });
-
-        $.fn.videoPreview = function(options) {
-            return this.each(function() {
-                var elm = $(this);
-                var frames = parseFloat(elm.data('frames'));
-
-                var img = $('<img/>', { 'src': elm.data('source') }).hide().css({
-                    'position': 'absolute',
-                    'cursor': 'pointer'
-                }).appendTo(elm);
-                var slider = $('<div/>').hide().css({
-                    'width': '2px',
-                    'height': '100%',
-                    'background': '#ddd',
-                    'position': 'absolute',
-                    'z-ndex': '1',
-                    'top': '0',
-                    'opacity': 0.6,
-                    'cursor': 'pointer'
-                }).appendTo(elm);
-
-                var width;
-
-                function defaultPos() { // 25% in, so 15th frame out of 60
-                    img.css('left', -width * frames / 4);
-                }
-
-                img.on('load',function() {
-                    $(this).show();
-                    width = this.width / frames;
-                    elm.css('width', width);
-                    defaultPos();
-                });
-                elm.mousemove(function(e) {
-                    var left = (e.clientX - elm.offset().left);
-                    if(left<0) {    // TODO Do all the frames show?
-                        left=0;
-                    }
-                    slider.show().css('left', left - 1); // -1 because it's 2px width
-                    img.css('left', -Math.floor((left / width) * frames) * width);
-                    var frm = Math.floor((left / width) * frames);
-                    var frame =  -frm * width;
-                    //console.log(frm+"/"+frames+", left: "+left+", clientX: " + e.clientX+", offset position: "+elm.offset().left); 
-                }).mouseout(function(e) {
-                    slider.hide();
-                    defaultPos();
-                });
-
-            });
-        };
-    })(jQuery);
-
-
-
-var stripview = function() {
-    $('.video-preview').videoPreview();
-}
-
 

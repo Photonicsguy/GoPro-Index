@@ -110,7 +110,6 @@ print $nav;
 <script src="js/use.fontawesome.com/f006bf6c27.js"></script>
 <script src="js/maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="js/cdnjs.cloudflare.com/ajax/libs/jqcloud/1.0.4/jqcloud-1.0.4.js"></script>
-<script src="js/magic.js"></script>
 <script src="js/vjs.zencdn.net/5.19.1/video.js"></script>
     <!-- If you'd like to support IE8 -->
    <!-- <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script> -->
@@ -119,11 +118,10 @@ print $nav;
 
 <script>
 
+/*
 $(document).ready(function() {
-    //ON PAGE LOAD
-    setTimeout(stripview, 0);
 });
-
+*/
 </script>
 </BODY>
 </HTML>
