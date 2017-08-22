@@ -60,9 +60,14 @@ print $nav;
 -->
 <!-- Plain thumbnail -- <img ng-src="{{ x.files.thumb }}"> -->
 
-<!-- FilmStrip -->
-<strip id="{{x.id}}" frames=60></strip>
-
+<!-- FilmStrip 
+<strip id="{{x.id}}" frames=60></strip> -->
+<!-- Video -->
+<vjs-video-container>
+    <video class="video-js vjs-default-skin" controls preload="auto" poster="cache/794_thumb.jpg">
+        <source src="{{x.files.low}}" type="video/mp4">
+    </video>
+</vjs-video-container>
 
 
 </div>
@@ -84,7 +89,7 @@ print $nav;
 	</div>
 <input ng-hide="!form{{x.id}}.$dirty" type="submit" id="submit" value="Submit"/>
     <div class="">
-        <!-- File: {{ x.files.original }}<br> -->
+        File: {{ x.files.original }}<br>
 	</div>
 
 </FORM>
@@ -95,7 +100,7 @@ print $nav;
 <!--Container end-->
 </div>
 
-<!-- <pre>json.vid = {{json.vid | json}}</pre> -->
+<pre>json.vid = {{json.vid | json}}</pre>
 
 
 <script src="js/ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
@@ -111,6 +116,7 @@ print $nav;
 <script src="js/maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="js/cdnjs.cloudflare.com/ajax/libs/jqcloud/1.0.4/jqcloud-1.0.4.js"></script>
 <script src="js/vjs.zencdn.net/5.19.1/video.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/vjs-video/0.1.10/vjs-video.js" integrity="sha256-8OEYMlpx9xf3NQIhA2XK7/WWRz4DC1mrhWRGrNvroEA=" crossorigin="anonymous"></script>
     <!-- If you'd like to support IE8 -->
    <!-- <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script> -->
 <script src="js/cdn.rawgit.com/erasche/videojs-framebyframe/c9dd2b6bf0e7b527aa505d0e9e19ffe756eb1ee5/video-framebyframe.js"></script>

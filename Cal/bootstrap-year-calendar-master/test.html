@@ -1,0 +1,132 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="./css/bootstrap-datepicker.min.css">
+		<link rel="stylesheet" type="text/css" href="./css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type="text/css" href="./css/bootstrap-year-calendar.min.css">
+		<link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="./css/style.css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="title" content="Bootstrap year calendar" />
+		<title>Bootstrap Year Calendar</title>
+</head>
+<body>
+
+<div id="calendar"></div>
+<div id="videos">here</div>
+
+
+
+<script src="./js/respond.min.js"></script>
+<script src="./js/jquery-1.10.2.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/bootstrap-datepicker.min.js"></script>
+<script src="./js/bootstrap-year-calendar.min.js"></script>
+<script src="./js/bootstrap-popover.js"></script>
+<script src="./js/scripts.js"></script>
+<script type="text/javascript" class="publish">
+
+$(function() {
+        $.ajax({ 
+            url: "json_cal.php", 
+            success: function(data) {
+				mydata = JSON.parse(data);
+				//console.log(mydata);
+                $('#calendar').data('calendar').setDataSource(mydata.video);
+				$('#calendar').data('calendar').setMinDate(new Date(mydata.MinDate));
+				$('#calendar').data('calendar').setMaxDate(new Date(mydata.MaxDate));
+//				console.log($('#calendar').data('calendar').getMinDate());
+//                $('#calendar').data('calendar').setDataSource(data.video);
+//                $('#calendar').data('calendar').setDataSource(data.video);
+//				console.log($('#calendar').data('calendar').getDataSource());
+				delete mydata;
+            } 
+        });
+	$('#calendar').calendar({
+
+		enableContextMenu: true,
+		enableRangeSelection: true,
+		contextMenuItems:[
+			{
+				text: 'Show',
+				click: null		// Change from null to function eventually
+			},
+		],
+		selectRange: function(e) {
+//			console.log(e);
+//			console.log('\nRange Select: \nStartDate: ' + e.startDate + '\nEndDate: ' + e.endDate);
+			 var RangeData = {
+				'mode'			: 'range',
+	            'startDate'		: e.startDate.getTime(),
+	            'endDate'		: e.endDate.getTime(),
+				'set'			: 1
+        };
+			$.ajax({
+				type: 'POST',
+	            url: "json_cal.php", 
+				data: RangeData,
+	            success: function(data) {
+					mydata = JSON.parse(data);
+					if(mydata.status==0){
+						$("#videos").html('');
+						for(var i in mydata.range) {
+							v = mydata.range[i];
+							content = '<div id="video">'+ v.id + ', ' + v.filename + ', ' + v.name + ': ' + v.description + ', <BR>';
+							$("#videos").append(content);
+
+						}
+					} else {
+						content = "Error: " + mydata.error;
+							$("#videos").html(content);
+
+					}
+            } 
+        });
+
+		},
+		mouseOnDay: function(e) {
+			if(e.events.length > 0) {
+				var content = '';
+				
+				for(var i in e.events) {
+					//console.log(e.events[i].duration);
+					var Duration = new Date(parseInt(e.events[i].duration));
+					content += '<div class="event-tooltip-content">'
+									+ '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+									+ '<div class="event-description">' + e.events[i].description + '</div>';
+					if(Duration.valueOf()>3600000) {
+									content+= '<div class="event-duration">' + Duration.getHours() + 'h' + Duration.getMinutes() + 'm' + Duration.getSeconds() + 's</div>';
+					} else if(Duration.valueOf()>60000) {
+									content+= '<div class="event-duration">' + Duration.getMinutes() + 'm' + Duration.getSeconds() + 's</div>';
+					}else{
+									content+= '<div class="event-duration">' + Duration.getSeconds() + 's</div>';
+
+					}
+					content+= '</div>';
+				}
+			
+				$(e.element).popover({ 
+					trigger: 'manual',
+					container: 'body',
+					html:true,
+					content: content
+				});
+				
+				$(e.element).popover('show');
+			}
+		},
+		mouseOutDay: function(e) {
+			if(e.events.length > 0) {
+				$(e.element).popover('hide');
+			}
+		},
+		dayContextMenu: function(e) {
+			$(e.element).popover('hide');
+		}
+	});
+	
+});
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@ var expiresValue= new Date(n.getFullYear()+1, n.getMonth(), n.getDate());
     // this will set the expiration to 12 months
 
 
-var app = angular.module('GoPro-IndexApp', ['ngCookies','ngInputModified']);
+var app = angular.module('GoPro-IndexApp', ['ngCookies','ngInputModified','vjs.video']);
 
 
 	app.config(['$cookiesProvider', function($cookiesProvider) {
