@@ -86,14 +86,14 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
         print "{$id}_strip.jpg exists, ";
     }else {
         print "{$id}_strip.jpg missing, creating... ";
-        $strip=shell_exec("video_preview.sh \"".fileCache."/{$id}_med.mp4\" \"".fileCache."/{$id}_strip.jpg\"");
+        $strip=shell_exec("./video_preview.sh \"".fileCache."/{$id}_med.mp4\" \"".fileCache."/{$id}_strip.jpg\"");
         print $strip;
     }
    if(file_exists(fileCache."/{$id}_thumb.jpg")){
         print "{$id}_thumb.jpg exists, ";
     }else {
         print "{$id}_thumb.jpg missing, creating... ";
-        print shell_exec("thumb.sh \"".fileCache."/{$id}_strip.jpg\"");
+        print shell_exec("./thumb.sh \"".fileCache."/{$id}_strip.jpg\"");
     }
 
  

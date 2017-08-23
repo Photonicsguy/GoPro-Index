@@ -45,7 +45,7 @@ $file=$md5=$exposure=$width=$height="";
 #die;
 #$stmt = $mysqli->prepare("INSERT INTO `".constant("database")."`.`file` (`filename`, `path`, `dt`, `md5`, `location`, `name`, `description`, `meta`, `star`, `duration`, `htagQty`, `htags`, `fps`, `aspect`,`width`, `height`, `old_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 
-$sql="SELECT * FROM `file` WHERE `dt` IS NULL or `width` IS NULL ORDER BY `id` DESC";
+$sql="SELECT * FROM `file` WHERE `dt` IS NULL or `width` IS NULL OR `duration` IS NULL ORDER BY `id` DESC";
 #$sql="SELECT * FROM `file` WHERE `old_id` = 99999 OR `dt` IS NULL or `width` IS NULL ORDER BY `id` DESC";
 $result = mysqli_query($mysqli,$sql) or die("SQL Error 1: " . mysqli_error($mysqli));
 while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
