@@ -38,12 +38,13 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
 
     #$errorText="<pre>".print_r($meta,true)."</pre>";
     
-    $sql="SELECT `ID`,`path`, `filename`, `dt` ,`duration`,`parent`,`children` FROM `file` WHERE `filename` LIKE '%{$m[2]}.%' and `video`= TRUE ORDER BY `dt` ASC";
+    $sql="SELECT `ID`,`path`, `filename`, `dt`,DATE_FORMAT(`dt`,'%W, %M %D, %Y') as date ,`duration`,`parent`,`children` FROM `file` WHERE `filename` LIKE '%{$m[2]}.%' and `video`= TRUE ORDER BY `dt` ASC";
     $vidResult = mysqli_query($mysqli,$sql) or die("SQL Error 1: " . mysqli_error($mysqli));
     $vid=array('dt'=>$meta['dt'],'duration'=>$meta['dur'],'class'=>'','error'=>$errorText,'htagQty'=>$meta['htagQty']);
     while($v = mysqli_fetch_array($vidResult, MYSQL_ASSOC)) {
         $solvedVideos[$v['ID']]=true;
-        preg_match('/(GOPR|(GP)(\d\d))(\d{4})/i',$v['filename'],$m);
+		preg_match('/(GOPR|(GP)(\d\d))(\d{4})/i',$v['filename'],$m);
+		$vid['date']=$v['date'];
         if(strtoupper($m[1])==="GOPR") {
             $vid['files'][0]['filename']=$v['filename'];
             $vid['files'][0]['ID']=$v['ID'];
@@ -56,27 +57,25 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
     // Sort Array
     ksort($vid['files']);
     $Videos[$vid['files'][0]['filename']]=$vid;
-
 }
-#print "-- <PRE>\n";
 foreach($Videos as $k =>$v){
     #$k=Main video
-    $parent=$v['files'][0]['ID'];
+	$parent=$v['files'][0]['ID'];
+	$date=$v['date'];
     unset($children);
-    print "-- Parent: {$parent}\n";
+	print "-- Parent ID: {$parent} from {$date}\n";
+	$sql="UPDATE `".constant("database")."`.`file` SET `parent`='{$parent}', `child`=TRUE WHERE ";
     foreach($v['files'] as $key=>$vid) {
-        if($key==0) {
-#            print "UPDATE `gopro`.`file` SET `parent` = '{$parent}' WHERE `file`.`id` = {$vid['ID']};\n";
-        } else {
-            print "UPDATE `gopro`.`file` SET `parent` = '{$parent}', `child` = TRUE WHERE `id` = {$vid['ID']};\n";
-              
-            $children[]=$vid['ID'];
-        }
-    }
+		#print "UPDATE `".constant("database")."`.`file` SET `parent` = '{$parent}', `child` = TRUE WHERE `id` = {$vid['ID']};\n";
+		$sql.="`id`={$vid['ID']} OR ";
+		$children[]=$vid['ID'];
+	}
+	$sql=substr($sql,null,-4).";\n";
+	print $sql;
     #unset($children[0]);
     $children=join(", ",$children);
-        print "UPDATE `gopro`.`file` SET `parent` = '{$parent}', `children` = '{$children}' WHERE `id` = {$parent};\n";
+        print "UPDATE `".constant("database")."`.`file` SET `parent`='{$parent}', `children`='{$children}' WHERE `id`={$parent};\n";
 print "\n";
 }
-#print print_r($Videos,true)."</pre>"
+print print_r($Videos,true)."</pre>"
 ?>
