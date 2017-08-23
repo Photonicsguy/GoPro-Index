@@ -3,12 +3,15 @@ Website for indexing GoPro videos written with Angular/JS/PHP/MySQL
 
 NOTE: Very early work in progress, please feel free to contribute or add suggestions
 
-## Calendar view
+## Views
+* GoPro/index.php
+* GoPro/files.php
+* GoPro/Cal/
 
-GoPro/Cal/
 
+## Demo
 
-
+Coming soon
 
 
 
