@@ -3,15 +3,22 @@ Website for indexing GoPro videos written with Angular/JS/PHP/MySQL
 
 NOTE: Very early work in progress, please feel free to contribute or add suggestions
 
+## Calendar view
+
+GoPro/Cal/
 
 
-Zend_Media_Iso14496 Class is a separate library with a separate licence from https://code.google.com/archive/p/php-reader/wikis/ISO14496.wiki
+
+
 
 
 ## Libraries used
 * 
-* 
-* 
+* Bootstrap - MIT
+* JQuery - MIT
+* http://www.bootstrap-year-calendar.com/ - Apache license V2.0
+* Zend_Media_Iso14496 Class is a separate library with a separate licence from https://code.google.com/archive/p/php-reader/wikis/ISO14496.wiki
+
 
 ## Scripts
 

@@ -27,7 +27,7 @@ var app = angular.module('GoPro-IndexApp', ['ngCookies','ngInputModified','vjs.v
 });
 
     app.controller('listCtrl', function($scope, $http, $cookies) {
-    $http.get("json.php").then(function (response) {
+    $http.get("json_old.php").then(function (response) {
 		$scope.json = response.data;
 		$scope.jsonorig = response.data;
 		

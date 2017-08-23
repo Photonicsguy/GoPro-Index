@@ -28,24 +28,26 @@
 <script type="text/javascript" class="publish">
 
 $(function() {
-        $.ajax({ 
-            url: "json_cal.php", 
+        $.ajax({
+			type: "POST",
+            url: "json.php",
+			data:  { 'mode'	: 'getCal' },
             success: function(data) {
 				mydata = JSON.parse(data);
 				//console.log(mydata);
                 $('#calendar').data('calendar').setDataSource(mydata.video);
 				$('#calendar').data('calendar').setMinDate(new Date(mydata.MinDate));
 				$('#calendar').data('calendar').setMaxDate(new Date(mydata.MaxDate));
-//				console.log($('#calendar').data('calendar').getMinDate());
-//                $('#calendar').data('calendar').setDataSource(data.video);
-//                $('#calendar').data('calendar').setDataSource(data.video);
-//				console.log($('#calendar').data('calendar').getDataSource());
-				delete mydata;
-            } 
+				//delete mydata;
+            },
+			error: function (xhr, ajaxOptions, thrownError) {
+				$('#calendar').html('Error ' + xhr.status + ': ' + thrownError);	// Perhaps provide a more detailed error message
+      }
+
         });
 	$('#calendar').calendar({
-
-		enableContextMenu: true,
+		//style:'custom',
+		enableContextMenu: false,
 		enableRangeSelection: true,
 		contextMenuItems:[
 			{
@@ -54,8 +56,8 @@ $(function() {
 			},
 		],
 		selectRange: function(e) {
-//			console.log(e);
-//			console.log('\nRange Select: \nStartDate: ' + e.startDate + '\nEndDate: ' + e.endDate);
+			console.log(e);
+			console.log('\nRange Select: \nStartDate: ' + e.startDate + '\nEndDate: ' + e.endDate);
 			 var RangeData = {
 				'mode'			: 'range',
 	            'startDate'		: e.startDate.getTime(),
@@ -64,7 +66,7 @@ $(function() {
         };
 			$.ajax({
 				type: 'POST',
-	            url: "json_cal.php", 
+	            url: "json.php", 
 				data: RangeData,
 	            success: function(data) {
 					mydata = JSON.parse(data);
@@ -72,16 +74,23 @@ $(function() {
 						$("#videos").html('');
 						for(var i in mydata.range) {
 							v = mydata.range[i];
-							content = '<div id="video">'+ v.id + ', ' + v.filename + ', ' + v.name + ': ' + v.description + ', <BR>';
+							//console.log(v);
+							content = '<div id="video">';
+							content += '<img src="/GoPro/cache/'+ v.id + '_thumb.jpg">'
+							+ v.id + ', ' + v.filename + ', ' + v.name + ': ' + v.description + '';
+							content+='</div>';
 							$("#videos").append(content);
 
 						}
 					} else {
-						content = "Error: " + mydata.error;
+						content += "Error: " + mydata.error;
 							$("#videos").html(content);
 
 					}
-            } 
+            },
+					error: function (xhr, ajaxOptions, thrownError) {
+					$('#calendar').html('Error ' + xhr.status + ': ' + thrownError);	// Perhaps provide a more detailed error message
+      }
         });
 
 		},
@@ -90,11 +99,19 @@ $(function() {
 				var content = '';
 				
 				for(var i in e.events) {
-					//console.log(e.events[i].duration);
-					var Duration = new Date(parseInt(e.events[i].duration));
+					vid=e.events[i];
+					//console.log(vid);
+					var Duration = new Date(parseInt(vid.duration));
+					if(vid.name==null){
+						vid.name="Untitled: ";
+					}
+					if(vid.description==null){
+						vid.description="";
+					}
 					content += '<div class="event-tooltip-content">'
-									+ '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
-									+ '<div class="event-description">' + e.events[i].description + '</div>';
+						+ '<div class="event-thumb"><a href="/GoPro/cache/'+ vid.id +'_low.mp4"><img src="/GoPro/cache/' + vid.id + '_thumb.jpg" height="100px"></a></div>'
+									+ '<div class="event-name" style="color:' + vid.color + '">' + vid.name + '</div>'
+									+ '<div class="event-description">' + vid.description + '</div>';
 					if(Duration.valueOf()>3600000) {
 									content+= '<div class="event-duration">' + Duration.getHours() + 'h' + Duration.getMinutes() + 'm' + Duration.getSeconds() + 's</div>';
 					} else if(Duration.valueOf()>60000) {
@@ -111,19 +128,65 @@ $(function() {
 					container: 'body',
 					html:true,
 					content: content
-				});
+				})
+				
+
+				
+		.on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(".popover").on("mouseleave", function () {
+            $(_this).popover('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".popover:hover").length) {
+                $(_this).popover("hide");
+            }
+        }, 300);
+		});
 				
 				$(e.element).popover('show');
 			}
 		},
 		mouseOutDay: function(e) {
 			if(e.events.length > 0) {
-				$(e.element).popover('hide');
+				function callback(e){
+   					return function(){
+						e.popover.trigger
+				        e.popover('hide');
+			    	}
+				}
+			//	setTimeout(callback($(e.element)), 1000);
+				//$(e.element).popover('hide');
 			}
 		},
 		dayContextMenu: function(e) {
 			$(e.element).popover('hide');
-		}
+		},
+		customDataSourceRenderer: function(element, date, events) {
+			//console.log(date);
+			//console.log(events);
+
+            if(1) {
+				$(element).css('background-color', '#93bcff');
+//                $(element).css('color', 'grey');
+                $(element).css('font-weight', 'bold');
+//                $(element).css('font-size', '15px');
+                //$(element).css('color', 'green');
+		//		<div class="day-content">22</div>
+				$(element).after('<span style="background-color:#93BCFF;position: relative; left: 6px; top:-20px ; font-size:80%;">' + events.length + '</span>');
+            }
+            else if(date.getTime() == 0) {
+                $(element).css('background-color', 'red');
+                $(element).css('color', 'white');
+                $(element).css('border-radius', '15px');
+            }
+            else if(date.getTime() == 0) {
+                $(element).css('border', '2px solid blue');
+            }
+        }
 	});
 	
 });

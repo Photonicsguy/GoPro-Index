@@ -11,6 +11,8 @@ const password="";		# Specify password
 
 
 const GoProPath="/path/to/GoPro/Videos";		# Path to original GoPro Video files
-const fileCache="/path/to/GoPro-Index/cache";	# Path to file cache (Thumbs, low res, etc...)
+const fileCache="/path/to/GoPro/cache";			# Path to file cache (Thumbs, low res, etc...)
+
+const queryHelp="`video`= 1 AND `child` = 0 AND `dt` IS NOT NULL";
 
 ?>
