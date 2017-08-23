@@ -60,15 +60,15 @@ print $nav;
 -->
 <!-- Plain thumbnail -- <img ng-src="{{ x.files.thumb }}"> -->
 
-<!-- FilmStrip 
-<strip id="{{x.id}}" frames=60></strip> -->
-<!-- Video -->
+<!-- FilmStrip  -->
+<strip id="{{x.id}}" frames=60></strip>
+<!-- Video
 <vjs-video-container>
     <video class="video-js vjs-default-skin" controls preload="auto" poster="cache/794_thumb.jpg">
         <source src="{{x.files.low}}" type="video/mp4">
     </video>
 </vjs-video-container>
-
+-->
 
 </div>
 <div class="col-lg-4" ng-hidden>{{video}}</div>

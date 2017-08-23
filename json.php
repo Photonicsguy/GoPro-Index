@@ -16,7 +16,7 @@ if(!isset($_REQUEST["mode"])){
 	die;
 }*/
 
-@include('../connect.php');
+@include('connect.php');
 $mysqli = mysqli_connect(constant("hostname"),constant("username"),constant("password"),constant("database"))
 	or die('Could not connect: ' . mysqli_error($mysqli));
 
@@ -162,9 +162,59 @@ $j["vid"]=$json;
 print json_encode($j);
 
 
-	
-}
+} elseif($_REQUEST["mode"]=="videoList"){
+	if(isset($_REQUEST["skip"])) {
+		$skip=intval($_REQUEST["skip"]);
+	} else {
+		$skip=0;
+	}
+	if(isset($_REQUEST["limit"])) {
+		$limit=intval($_REQUEST["limit"]);
+	} else {
+		$limit=2;
+	}
 
+	$result=$mysqli->query("SELECT * FROM `path`");
+	while ($r = $result->fetch_assoc()) {
+	    $paths[$r['id']]=$r;
+	    unset($paths[$r['id']]['id']);  // Don't need id defined twice
+	    $paths[$r['id']]["exists"]=file_exists($r['path']);
+	}
+	
+    $sql="SELECT `id`,`filename`, `path`, `dt`,1000*UNIX_TIMESTAMP(`dt`) as jsdt, UNIX_TIMESTAMP(`dt`) as unixdt,`location`, `name`, `description`, `meta`, `star`,TIME_TO_SEC(`duration`) as duration, `htagQty`, `htags`, `fps`, `aspect`, `set`, `seq`, `exposure`, `width`, `height`,`children` FROM `file` WHERE `video` = TRUE AND `child` IS false ORDER BY `dt` DESC LIMIT {$skip},{$limit}";
+	$result = mysqli_query($mysqli,$sql) or die("SQL Error 1: " . mysqli_error($mysqli));
+
+	while($r = mysqli_fetch_assoc($result)):
+$row=array("error"=>false,"errorText"=>"","class"=>"success","files"=>array("original"=>false));
+$row['id']=intval($r["id"]);  
+$r["id"]=intval($r["id"]);
+#$r["unixdt"]=intval($r["unixdt"]);
+$r["htagQty"]=intval($r["htagQty"]);
+//TODO
+$r["htags"]=explode(',',$r["htags"]);
+foreach($r["htags"] as $k=>$t)
+    $r["htags"][$k]=intval($t);
+
+$r["fps"]=floatval($r["fps"]);
+$r["path"]=intval($r["path"]);
+$row["unixdt"]=intval($r["unixdt"]);
+$row["jsdt"]=intval($r["unixdt"]*1000);
+$row["duration"]=intval($r["duration"]);
+$row["sql"]=$r;
+
+
+$json[]=$row;
+endwhile;
+
+
+#var_dump($json);
+$j["vid"]=$json;
+#$j["paths"]=$paths;
+#$j["header"]=array("field","text1");
+print json_encode($j);
+#print_r($j);
+
+}
 
 function prettyfilesize($file)  {
     $unit="K";
