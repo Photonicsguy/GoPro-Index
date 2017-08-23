@@ -116,7 +116,7 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
         $sql="UPDATE `".constant("database")."`.`file` SET ";
         $sql.="`fps` = '$fps',";
         $sql.="`dt`='{$datetime}',";
-        $sql.="`duration`='{$duration}',";
+        $sql.="`duration`='SEC_TO_TIME({$duration})',";
         $sql.="`htagQty`='{$htagQty}',";
         if($htags==null){ $sql.="`htags`=NULL,"; }else{ $sql.="`htags`='{$htags}',"; }
         $sql.="`width` = '$width',";
