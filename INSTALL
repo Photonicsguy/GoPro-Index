@@ -8,4 +8,9 @@ Installing
 
 2b. Edit connect.php, Enter hostname/username/password as well as fileCache location
 
-3.
+3. Add video paths to path table
+ex.
+INSERT INTO `path` (`id`, `path`, `description`) VALUES (NULL, '/path/to/videos', NULL);
+
+4. 
+
