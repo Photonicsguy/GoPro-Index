@@ -18,7 +18,6 @@ where t1.`md5`=t2.`md5`
 
  */
 
-const database="gopro";
 @include('/var/www/GoPro/connect.php');
 
 require_once 'Zend/Media/Iso14496.php'; 
@@ -40,11 +39,11 @@ $seq=$set=null;
 $dt=$pathid=$aspect=$set=$seq=$width=$height=0;
 $file=$md5=$exposure=$width=$height="";
 
-#$stmt_photo = $mysqli->prepare("INSERT INTO `gopro`.`file` (`filename`, `path`, `dt`, `md5`,`aspect`, `set`, `seq`, `exposure`, `width`, `height`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+#$stmt_photo = $mysqli->prepare("INSERT INTO `".constant("database")."`.`file` (`filename`, `path`, `dt`, `md5`,`aspect`, `set`, `seq`, `exposure`, `width`, `height`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 #$stmt_photo->bind_param($file,$pathid,$dt,$md5,$aspect,$set,$seq,$exposure,$width,$height);
 #print $mysqli->error;
 #die;
-#$stmt = $mysqli->prepare("INSERT INTO `gopro`.`file` (`filename`, `path`, `dt`, `md5`, `location`, `name`, `description`, `meta`, `star`, `duration`, `htagQty`, `htags`, `fps`, `aspect`,`width`, `height`, `old_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+#$stmt = $mysqli->prepare("INSERT INTO `".constant("database")."`.`file` (`filename`, `path`, `dt`, `md5`, `location`, `name`, `description`, `meta`, `star`, `duration`, `htagQty`, `htags`, `fps`, `aspect`,`width`, `height`, `old_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 
 $sql="SELECT * FROM `file` WHERE `dt` IS NULL or `width` IS NULL ORDER BY `id` DESC";
 #$sql="SELECT * FROM `file` WHERE `old_id` = 99999 OR `dt` IS NULL or `width` IS NULL ORDER BY `id` DESC";
@@ -112,9 +111,9 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
 		$dur = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
         #print"$datetime\t$duration\t$aspect\n";
         if(!isset($htags)){$htags='';}
-        $sql = "INSERT INTO `scanner`.`gopro` (`dt`,`duration`,`htagQty`,`htags`,`aspect`,`md5`,`fps`) VALUES ('$datetime', '$dur', '$htagQty', '$htags','$aspect','$md5','$fps');";
-        #$sql="UPDATE `scanner`.`gopro` SET `md5` = '$md5' WHERE `gopro`.`path` = '$dir' AND `gopro`.`filename`='$file' AND  `gopro`.`duration`='$dur' ;";
-        $sql="UPDATE `gopro`.`file` SET ";
+        #$sql = "INSERT INTO `scanner`.`` (`dt`,`duration`,`htagQty`,`htags`,`aspect`,`md5`,`fps`) VALUES ('$datetime', '$dur', '$htagQty', '$htags','$aspect','$md5','$fps');";
+        #$sql="UPDATE `scanner`.`` SET `md5` = '$md5' WHERE ``.`path` = '$dir' AND ``.`filename`='$file' AND  ``.`duration`='$dur' ;";
+        $sql="UPDATE `".constant("database")."`.`file` SET ";
         $sql.="`fps` = '$fps',";
         $sql.="`dt`='{$datetime}',";
         $sql.="`duration`='{$duration}',";
@@ -146,7 +145,7 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
                     $seq=$m['single'];
                 }
                 print_r($exif);
-                $sql="INSERT INTO `gopro`.`file` (`filename`, `path`, `dt`, `md5`,`aspect`, `set`, `seq`, `exposure`, `width`, `height`,`video`) VALUES ('{$file}', '{$pathid}', '{$exif['DateTime']}', '{$md5}','{$aspect}','{$set}','{$seq}','{$exif['ExposureTime']}','{$width}','{$height}',false)";
+                $sql="INSERT INTO `".constant("database")."`.`file` (`filename`, `path`, `dt`, `md5`,`aspect`, `set`, `seq`, `exposure`, `width`, `height`,`video`) VALUES ('{$file}', '{$pathid}', '{$exif['DateTime']}', '{$md5}','{$aspect}','{$set}','{$seq}','{$exif['ExposureTime']}','{$width}','{$height}',false)";
                 print $sql;
                     #if($mysqli->query($sql)===TRUE) {
                         #print "-- Added {$path}/{$file} as ID ".$mysqli->insert_id."\n";
@@ -174,7 +173,7 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
 #print_r($keys);
 print "-- Updating Meta keywords\n";
 foreach($keys as $k=>$c) {
-    $sql="INSERT INTO `gopro`.`words` (`keyword`, `count`) VALUES ('{$k}', '{$c}') ON DUPLICATE KEY UPDATE `count`='{$c}';";
+    $sql="INSERT INTO `".constant("database")."`.`words` (`keyword`, `count`) VALUES ('{$k}', '{$c}') ON DUPLICATE KEY UPDATE `count`='{$c}';";
 #    print "$sql\n";
         if($mysqli->query($sql)===TRUE) {
 #        print "-- Added {$k}:{$c} as ID ".$mysqli->insert_id."\n";

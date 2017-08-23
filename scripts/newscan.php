@@ -39,11 +39,11 @@ $seq=$set=null;
 $dt=$pathid=$aspect=$set=$seq=$width=$height=0;
 $file=$md5=$exposure=$width=$height="";
 
-#$stmt_photo = $mysqli->prepare("INSERT INTO `gopro`.`file` (`filename`, `path`, `dt`, `md5`,`aspect`, `set`, `seq`, `exposure`, `width`, `height`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+#$stmt_photo = $mysqli->prepare("INSERT INTO ``.`file` (`filename`, `path`, `dt`, `md5`,`aspect`, `set`, `seq`, `exposure`, `width`, `height`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 #$stmt_photo->bind_param($file,$pathid,$dt,$md5,$aspect,$set,$seq,$exposure,$width,$height);
 #print $mysqli->error;
 #die;
-#$stmt = $mysqli->prepare("INSERT INTO `gopro`.`file` (`filename`, `path`, `dt`, `md5`, `location`, `name`, `description`, `meta`, `star`, `duration`, `htagQty`, `htags`, `fps`, `aspect`,`width`, `height`, `old_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+#$stmt = $mysqli->prepare("INSERT INTO ``.`file` (`filename`, `path`, `dt`, `md5`, `location`, `name`, `description`, `meta`, `star`, `duration`, `htagQty`, `htags`, `fps`, `aspect`,`width`, `height`, `old_id`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
 
 foreach($paths as $pathid => $path){
     foreach(scandir($path) as $file) {
@@ -68,7 +68,7 @@ foreach($paths as $pathid => $path){
                     print "-- Matched file {$file}\n";
                 }else {
                     $md5=gen_md5("{$path}/{$file}");
-                    $sql="INSERT INTO `gopro`.`file` (`filename`, `path`, `dt`, `md5`,`aspect`, `set`, `seq`, `exposure`, `width`, `height`,`video`) VALUES ('{$file}', '{$pathid}', '{$exif['DateTime']}', '{$md5}','{$aspect}','{$set}','{$seq}','{$exif['ExposureTime']}','{$width}','{$height}',false)";
+                    $sql="INSERT INTO `".constant("database")."`.`file` (`filename`, `path`, `dt`, `md5`,`aspect`, `set`, `seq`, `exposure`, `width`, `height`,`video`) VALUES ('{$file}', '{$pathid}', '{$exif['DateTime']}', '{$md5}','{$aspect}','{$set}','{$seq}','{$exif['ExposureTime']}','{$width}','{$height}',false)";
                     if($mysqli->query($sql)===TRUE) {
                         print "-- Added {$path}/{$file} as ID ".$mysqli->insert_id."\n";
                     }
@@ -84,7 +84,7 @@ foreach($paths as $pathid => $path){
                 }elseif($query->num_rows>1) {
                     print "-- Too many matches for {$file}\n";
                 }else {
-/*                    $sql="SELECT `ID`,`md5` FROM `scanner`.`gopro` WHERE `md5`='{$md5}' AND `path`='{$path}'";
+/*                    $sql="SELECT `ID`,`md5` FROM `scanner`.`` WHERE `md5`='{$md5}' AND `path`='{$path}'";
                     unset($md5);
                     $query = $mysqli->query($sql) or die("SQL Error 1: " . $mysqli->error);
                     if($query->num_rows==1){
@@ -93,7 +93,7 @@ foreach($paths as $pathid => $path){
                     }else{
  */                        $md5=gen_md5("{$path}/{$file}");
 #`                    }
-                    $sql="INSERT INTO `gopro`.`file` (`filename`, `path`,`md5`,`video`) VALUES ('${file}', '{$pathid}', '{$md5}',true)";
+                    $sql="INSERT INTO `".constant("database")."`.`file` (`filename`, `path`,`md5`,`video`) VALUES ('${file}', '{$pathid}', '{$md5}',true)";
                     if($mysqli->query($sql)===TRUE) {
                         print "-- Added {$path}/{$file} as ID ".$mysqli->insert_id."\n";
                     }else {
@@ -106,7 +106,7 @@ foreach($paths as $pathid => $path){
 }
 
                 /*
-            $sql="SELECT `ID` FROM `scanner`.`gopro` WHERE `md5`='{$md5}' AND `path`='{$path}'";
+            $sql="SELECT `ID` FROM `scanner`.`` WHERE `md5`='{$md5}' AND `path`='{$path}'";
             $query = $mysqli->query($sql) or die("SQL Error 1: " . $mysqli->error);
             if($query->num_rows==1){
                 $existing=$query->fetch_array();
@@ -117,12 +117,12 @@ foreach($paths as $pathid => $path){
             }else{
                 print "New\n";
                 $md5=gen_md5("{$path}/{$file}");                
-                $sql="SELECT * FROM `scanner`.`gopro` WHERE `md5` = '{$md5}'";
+                $sql="SELECT * FROM `scanner`.`` WHERE `md5` = '{$md5}'";
                 $query = $mysqli->query($sql) or die("SQL Error 1: " . $mysqli->error);
                 if($query->num_rows==1){
                     print "Oh Wait\n";
                     $existing=$query->fetch_array();
-                    $sql="INSERT INTO `gopro`.`file` (`filename`, `path`,`md5`,`old_id`,`dt`,`duration`) VALUES ('${file}', '{$pathid}', '{$existing['md5']}','{$existing['ID']}','{$existing['dt']}','{$existing['duration']}')";
+                    $sql="INSERT INTO ``.`file` (`filename`, `path`,`md5`,`old_id`,`dt`,`duration`) VALUES ('${file}', '{$pathid}', '{$existing['md5']}','{$existing['ID']}','{$existing['dt']}','{$existing['duration']}')";
                     if($mysqli->query($sql)===TRUE) {
                         print "-- Added {$path}/{$file} as ID ".$mysqli->insert_id."\n";
                     }
@@ -206,9 +206,9 @@ die;
 		$dur = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
         #print"$datetime\t$duration\t$aspect\n";
         if(!isset($htags)){$htags='';}
-        $sql = "INSERT INTO `scanner`.`gopro` (`filename`, `dt`, `path`, `duration`,`htagQty`,`htags`,`aspect`,`md5`,`fps`) VALUES ('$file', '$datetime', '$dir', '$dur', '$htagQty', '$htags','$aspect','$md5','$fps');";
-        #$sql="UPDATE `scanner`.`gopro` SET `md5` = '$md5' WHERE `gopro`.`path` = '$dir' AND `gopro`.`filename`='$file' AND  `gopro`.`duration`='$dur' ;";
-        #$sql.="UPDATE `scanner`.`gopro` SET `fps` = '$fps' WHERE `gopro`.`path` = '$dir' AND `gopro`.`filename`='$file' AND  `gopro`.`duration`='$dur' ;";
+        $sql = "INSERT INTO `scanner`.`` (`filename`, `dt`, `path`, `duration`,`htagQty`,`htags`,`aspect`,`md5`,`fps`) VALUES ('$file', '$datetime', '$dir', '$dur', '$htagQty', '$htags','$aspect','$md5','$fps');";
+        #$sql="UPDATE `scanner`.`` SET `md5` = '$md5' WHERE ``.`path` = '$dir' AND ``.`filename`='$file' AND  ``.`duration`='$dur' ;";
+        #$sql.="UPDATE `scanner`.`` SET `fps` = '$fps' WHERE ``.`path` = '$dir' AND ``.`filename`='$file' AND  ``.`duration`='$dur' ;";
 
 		print "$sql\n";
 

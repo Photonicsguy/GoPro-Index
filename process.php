@@ -61,8 +61,8 @@ die;
  */
         // if there are no errors process our form, then return a message
         
-        #$query="UPDATE `scanner`.`gopro` SET `location` = 'location', `name` = 'myname', `description` = 'mytest_desc', `meta` = 'meta', `star` = '2' WHERE `gopro`.`ID` = '{$id}';";
-        #$sql_orig="UPDATE `scanner`.`gopro` SET `name` = '{$name}', `description` = '{$desc}', `meta` = '{$tags}' WHERE `gopro`.`ID` = '{$id}';";
+        #$query="UPDATE `scanner`.`` SET `location` = 'location', `name` = 'myname', `description` = 'mytest_desc', `meta` = 'meta', `star` = '2' WHERE ``.`ID` = '{$id}';";
+        #$sql_orig="UPDATE `scanner`.`` SET `name` = '{$name}', `description` = '{$desc}', `meta` = '{$tags}' WHERE ``.`ID` = '{$id}';";
         $sql="UPDATE `file` SET `name` = ?, `description` = ?, `meta` = ? WHERE `file`.`id` = ?;";
         $stmt = mysqli_prepare($connect,$sql);
         $stmt->bind_param('ssss', $name,$desc,$meta,$id);

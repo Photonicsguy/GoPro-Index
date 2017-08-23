@@ -1,7 +1,7 @@
 <?PHP
 // https://gopro.com/support/articles/hero3-and-hero3-file-naming-convention
 
-// SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(`duration`)))as total,max(`dt`) as recent FROM `gopro` WHERE 1
+// SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(`duration`)))as total,max(`dt`) as recent FROM `` WHERE 1
 // ffmpeg -i $file -vf "scale=640:-2"  -vcodec libx264 -crf 30 -y $id_low.mp4
 
 // ffmpeg -f concat -safe 0 -i list -c copy output.mp4
