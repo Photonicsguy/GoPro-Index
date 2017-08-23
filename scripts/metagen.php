@@ -102,7 +102,7 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
         $height=$f['height'][0];
         $width=$f['width'][0];
         $aspect=$m['aspect'][0];
-		$duration=$m['duration'][0];
+		$duration=trim($m['duration'][0]);
 		$datetime=$m['datetime'][0];
 		$seconds=$duration;
 		$hours = floor($seconds / 3600);
@@ -116,7 +116,7 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
         $sql="UPDATE `".constant("database")."`.`file` SET ";
         $sql.="`fps` = '$fps',";
         $sql.="`dt`='{$datetime}',";
-        $sql.="`duration`='SEC_TO_TIME({$duration})',";
+        $sql.="`duration`=SEC_TO_TIME({$duration}),";
         $sql.="`htagQty`='{$htagQty}',";
         if($htags==null){ $sql.="`htags`=NULL,"; }else{ $sql.="`htags`='{$htags}',"; }
         $sql.="`width` = '$width',";
