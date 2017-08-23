@@ -17,7 +17,7 @@
 <link rel="stylesheet" type="text/css" href="css/list.css" />
 </head>
 <BODY style="background:#eee">
-
+<a href="Cal/">Calendar view</a>&nbsp;|&nbsp;<a href="files.php">File view</a><BR>
 <!--
 <nav class="navbar navbar-default">
   <div class="container-fluid">
