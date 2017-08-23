@@ -12,5 +12,11 @@ Installing
 ex.
 INSERT INTO `path` (`id`, `path`, `description`) VALUES (NULL, '/path/to/videos', NULL);
 
-4. 
+4. Run scripts/newscan.php
+Script searches the paths in the path table and generated MD5SUM hashes
 
+5. Run scripts/metagen.php, pipe output into mysql //FIXME
+
+6. Run scripts/gen_cache.php
+
+7. 

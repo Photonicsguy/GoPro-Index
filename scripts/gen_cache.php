@@ -2,7 +2,7 @@
 <?PHP
 // ffmpeg -i $file -vf "scale=640:-2"  -vcodec libx264 -crf 30 -y $id_low.mp4
 
-@include('connect.php');
+@include('../connect.php');
 $mysqli = mysqli_connect(constant("hostname"),constant("username"),constant("password"),constant("database"))
 	or die('Could not connect: ' . mysqli_error($mysqli));
 
@@ -86,14 +86,14 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
         print "{$id}_strip.jpg exists, ";
     }else {
         print "{$id}_strip.jpg missing, creating... ";
-        $strip=shell_exec("/var/www/GoPro/scripts/video_preview.sh \"".fileCache."/{$id}_med.mp4\" \"".fileCache."/{$id}_strip.jpg\"");
+        $strip=shell_exec("video_preview.sh \"".fileCache."/{$id}_med.mp4\" \"".fileCache."/{$id}_strip.jpg\"");
         print $strip;
     }
    if(file_exists(fileCache."/{$id}_thumb.jpg")){
         print "{$id}_thumb.jpg exists, ";
     }else {
         print "{$id}_thumb.jpg missing, creating... ";
-        print shell_exec("/var/www/GoPro/thumb.sh \"".fileCache."/{$id}_strip.jpg\"");
+        print shell_exec("thumb.sh \"".fileCache."/{$id}_strip.jpg\"");
     }
 
  

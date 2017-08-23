@@ -18,7 +18,7 @@ where t1.`md5`=t2.`md5`
 
  */
 
-@include('/var/www/GoPro/connect.php');
+@include('../connect.php');
 
 require_once 'Zend/Media/Iso14496.php'; 
 
