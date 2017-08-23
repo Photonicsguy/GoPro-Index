@@ -58,13 +58,14 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
     ksort($vid['files']);
     $Videos[$vid['files'][0]['filename']]=$vid;
 }
+print "-- Clear existing sets\nUPDATE `gopro_dev`.`file` SET `groupmember` = NULL, `parent` = NULL, `child` = NULL, `children` = NULL, `set` = NULL WHERE 1;\n\n";
 foreach($Videos as $k =>$v){
     #$k=Main video
 	$parent=$v['files'][0]['ID'];
 	$date=$v['date'];
     unset($children);
 	print "-- Parent ID: {$parent} from {$date}\n";
-	$sql="UPDATE `".constant("database")."`.`file` SET `parent`='{$parent}', `child`=TRUE WHERE ";
+	$sql="UPDATE `".constant("database")."`.`file` SET `parent`='{$parent}',`groupmember`=TRUE,`child`=TRUE WHERE ";
     foreach($v['files'] as $key=>$vid) {
 		#print "UPDATE `".constant("database")."`.`file` SET `parent` = '{$parent}', `child` = TRUE WHERE `id` = {$vid['ID']};\n";
 		$sql.="`id`={$vid['ID']} OR ";
@@ -74,8 +75,8 @@ foreach($Videos as $k =>$v){
 	print $sql;
     #unset($children[0]);
     $children=join(", ",$children);
-        print "UPDATE `".constant("database")."`.`file` SET `parent`='{$parent}', `children`='{$children}' WHERE `id`={$parent};\n";
+        print "UPDATE `".constant("database")."`.`file` SET `parent`='{$parent}',`groupmember`=TRUE, `children`='{$children}' WHERE `id`={$parent};\n";
 print "\n";
 }
-print print_r($Videos,true)."</pre>"
+#print print_r($Videos,true)."</pre>"
 ?>
