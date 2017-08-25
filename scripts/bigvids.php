@@ -66,7 +66,9 @@ foreach($Videos as $k =>$v){
     unset($children);
 	print "-- Parent ID: {$parent} from {$date}\n";
 	$sql="UPDATE `".constant("database")."`.`file` SET `parent`='{$parent}',`groupmember`=TRUE,`child`=TRUE WHERE ";
-    foreach($v['files'] as $key=>$vid) {
+	foreach($v['files'] as $key=>$vid) {
+		if($vid['ID']==$parent)continue;	// Skip marking parent as child
+
 		#print "UPDATE `".constant("database")."`.`file` SET `parent` = '{$parent}', `child` = TRUE WHERE `id` = {$vid['ID']};\n";
 		$sql.="`id`={$vid['ID']} OR ";
 		$children[]=$vid['ID'];
