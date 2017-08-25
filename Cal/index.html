@@ -76,7 +76,7 @@ $(function() {
 							v = mydata.range[i];
 							//console.log(v);
 							content = '<div id="video">';
-							content += '<img src="/GoPro/cache/'+ v.id + '_thumb.jpg">'
+							content += '<img src="../cache/'+ v.id + '_thumb.jpg">'
 							+ v.id + ', ' + v.filename + ', ' + v.name + ': ' + v.description + '';
 							content+='</div>';
 							$("#videos").append(content);
@@ -109,7 +109,7 @@ $(function() {
 						vid.description="";
 					}
 					content += '<div class="event-tooltip-content">'
-						+ '<div class="event-thumb"><a href="/GoPro/cache/'+ vid.id +'_low.mp4"><img src="/GoPro/cache/' + vid.id + '_thumb.jpg" height="100px"></a></div>'
+						+ '<div class="event-thumb"><a href="../cache/'+ vid.id +'_low.mp4"><img src="../cache/' + vid.id + '_thumb.jpg" height="100px"></a></div>'
 									+ '<div class="event-name" style="color:' + vid.color + '">' + vid.name + '</div>'
 									+ '<div class="event-description">' + vid.description + '</div>';
 					if(Duration.valueOf()>3600000) {

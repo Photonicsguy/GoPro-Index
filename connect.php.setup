@@ -7,7 +7,7 @@ const database="gopro";
 const username="";		# Specify username
 const password="";		# Specify password
 
-
+const wwwBase="/GoPro-Index";
 
 
 const GoProPath="/path/to/GoPro/Videos";		# Path to original GoPro Video files
