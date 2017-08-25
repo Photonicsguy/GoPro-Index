@@ -11,8 +11,9 @@ NOTE: Very early work in progress, please feel free to contribute or add suggest
 
 ## Demo
 
-Coming soon
+http://photonicsguy.ca/GoPro-Index/
 
+I only have two sample videos up now, I'll add more to the demo eventually
 
 
 ## Libraries used

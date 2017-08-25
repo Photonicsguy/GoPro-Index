@@ -58,7 +58,7 @@ while($r = mysqli_fetch_array($result, MYSQL_ASSOC)) {
     ksort($vid['files']);
     $Videos[$vid['files'][0]['filename']]=$vid;
 }
-print "-- Clear existing sets\nUPDATE `gopro_dev`.`file` SET `groupmember` = NULL, `parent` = NULL, `child` = NULL, `children` = NULL, `set` = NULL WHERE 1;\n\n";
+print "-- Clear existing sets\nUPDATE `file` SET `groupmember` = NULL, `parent` = NULL, `child` = NULL, `children` = NULL, `set` = NULL WHERE 1;\n\n";
 foreach($Videos as $k =>$v){
     #$k=Main video
 	$parent=$v['files'][0]['ID'];
