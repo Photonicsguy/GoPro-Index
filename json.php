@@ -25,7 +25,7 @@ $mysqli = mysqli_connect(constant("hostname"),constant("username"),constant("pas
 // Mode: getCal
 //
 if($_REQUEST["mode"]=="getCal") {
-	$sql="SELECT UNIX_TIMESTAMP(MIN(dt))*1000 as MinDate,UNIX_TIMESTAMP(MAX(dt))*1000 as MaxDate FROM `file` WHERE ".constant("queryHelp");
+	$sql="SELECT UNIX_TIMESTAMP(date(MIN(dt)))*1000 as MinDate,UNIX_TIMESTAMP(date(MAX(dt)))*1000 as MaxDate FROM `file` WHERE ".constant("queryHelp");
 	$result = mysqli_query($mysqli,$sql) or die("SQL Error 1: " . mysqli_error($mysqli));
 	$json = mysqli_fetch_assoc($result);
 
@@ -181,7 +181,7 @@ print json_encode($j);
 	    $paths[$r['id']]["exists"]=file_exists($r['path']);
 	}
 	
-    $sql="SELECT `id`,`filename`, `path`, `dt`,1000*UNIX_TIMESTAMP(`dt`) as jsdt, UNIX_TIMESTAMP(`dt`) as unixdt,`location`, `name`, `description`, `meta`, `star`,TIME_TO_SEC(`duration`) as duration, `htagQty`, `htags`, `fps`, `aspect`, `set`, `seq`, `exposure`, `width`, `height`,`children` FROM `file` WHERE `video` = TRUE AND `child` IS false ORDER BY `dt` DESC LIMIT {$skip},{$limit}";
+    $sql="SELECT `id`,`filename`, `path`, `dt`,1000*UNIX_TIMESTAMP(`dt`) as jsdt, UNIX_TIMESTAMP(`dt`) as unixdt,`location`, `name`, `description`, `meta`, `star`,TIME_TO_SEC(`duration`) as duration, `htagQty`, `htags`, `fps`, `aspect`, `set`, `seq`, `exposure`, `width`, `height`,`children` FROM `file` WHERE ".constant("queryHelp")." ORDER BY `dt` DESC LIMIT {$skip},{$limit}";
 	$result = mysqli_query($mysqli,$sql) or die("SQL Error 1: " . mysqli_error($mysqli));
 
 	while($r = mysqli_fetch_assoc($result)):
