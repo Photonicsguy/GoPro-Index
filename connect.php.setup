@@ -8,6 +8,7 @@ const username="";		# Specify username
 const password="";		# Specify password
 
 const wwwBase="/GoPro-Index";
+#const TimeZone="America/Toronto";		# Optional Timezone for MySQL queries
 
 
 const GoProPath="/path/to/GoPro/Videos";		# Path to original GoPro Video files

@@ -19,7 +19,7 @@ if(!isset($_REQUEST["mode"])){
 @include('connect.php');
 $mysqli = mysqli_connect(constant("hostname"),constant("username"),constant("password"),constant("database"))
 	or die('Could not connect: ' . mysqli_error($mysqli));
-
+if(defined("TimeZone"))mysqli_query($mysqli,'SET time_zone="'.constant("TimeZone").'"');
 
 //
 // Mode: getCal
