@@ -6,6 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="./css/bootstrap-year-calendar.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/style.css">
+		<link rel="stylesheet" type="text/css" href="cal.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="title" content="Bootstrap year calendar" />
@@ -16,8 +17,78 @@
 <div id="calendar"></div>
 <div id="videos">here</div>
 
+<div id="myModal" class="modal">
+  <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
+  <img class="modal-content" id="img01">
+  
+  <div id="modalname"></div>
+  <div id="modaldesc"></div>
+</div>
+<script>
+
+// Get the <span> element that closes the modal
+function videoModal(id) {
+//	var popover = document.getElementById('#popover');	
+//	popover.popover('hide');
+	$(".popover").popover('hide');
+//	console.log("Clicked on video ID: "+id);
+	console.log(meta);
+	m=meta.video[searchVideo(id)];
+//	console.log("Array: "+s+"   "+id);
+
+	console.log(m);
+	var modal = document.getElementById('myModal');
+	var modalImg = document.getElementById("img01");
+
+	modal.style.display = "block";
+    modalImg.src = '../cache/'+id+'_thumb.jpg';
+    document.getElementById("modalname").innerHTML = m.name;
+    document.getElementById("modaldesc").innerHTML = m.description;
+    desc=document.getElementById("modaldesc");	
+
+	var DurTxt = $("<p></p>").text(fmtDuration(m.duration));
+//	var Duration = "Duration text";
+	$("#modaldesc").append(DurTxt);
 
 
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() { 
+  modal.style.display = "none";
+}
+$(this).on('keyup',function(evt) {
+    if (evt.keyCode == 27) {
+  	modal.style.display = "none";
+	$(this).off('keyup');		// Disable keypress detection
+    }
+});
+
+}
+
+function searchVideo(id){
+	n=id.toString();
+    for (var i=0; i < meta.video.length; i++) {
+        if (meta.video[i].id === n) {
+//			console.log("Found "+id+" as Array index: "+i);
+            return i;
+        }
+    }
+}
+
+function fmtDuration(dur) {
+	Duration=new Date(parseInt(dur));
+	content = '';
+	if(Duration.valueOf()>3600000) {
+		content+= Duration.getHours() + 'h' + Duration.getMinutes() + 'm' + Duration.getSeconds() + 's';
+	} else if(Duration.valueOf()>60000) {
+		content+= Duration.getMinutes() + 'm' + Duration.getSeconds() + 's';
+	}else{
+		content+= Duration.getSeconds() + 's';
+	}
+	return content;
+}
+</script>
 <script src="./js/respond.min.js"></script>
 <script src="./js/jquery-1.10.2.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
@@ -26,7 +97,7 @@
 <script src="./js/bootstrap-popover.js"></script>
 <script src="./js/scripts.js"></script>
 <script type="text/javascript" class="publish">
-
+var meta;
 $(function() {
         $.ajax({
 			type: "POST",
@@ -34,6 +105,7 @@ $(function() {
 			data:  { 'mode'	: 'getCal' },
             success: function(data) {
 				mydata = JSON.parse(data);
+			meta=mydata;	
 				//console.log(mydata);
                 $('#calendar').data('calendar').setDataSource(mydata.video);
 				$('#calendar').data('calendar').setMinDate(new Date(mydata.MinDate));
@@ -69,21 +141,21 @@ $(function() {
 	            url: "../json.php", 
 				data: RangeData,
 	            success: function(data) {
-					mydata = JSON.parse(data);
-					if(mydata.status==0){
+					myrange = JSON.parse(data);
+					if(myrange.status==0){
 						$("#videos").html('');
-						for(var i in mydata.range) {
-							v = mydata.range[i];
+						for(var i in myrange.range) {
+							v = myrange.range[i];
 							//console.log(v);
 							content = '<div id="video">';
-							content += '<img src="../cache/'+ v.id + '_thumb.jpg">'
+							content += '<img src="../cache/'+ v.id + '_thumb.jpg" onclick="videoModal('+v.id+')">'
 							+ v.id + ', ' + v.filename + ', ' + v.name + ': ' + v.description + '';
 							content+='</div>';
 							$("#videos").append(content);
 
 						}
 					} else {
-						content += "Error: " + mydata.error;
+						content += "Error: " + myrange.error;
 							$("#videos").html(content);
 
 					}
@@ -109,7 +181,7 @@ $(function() {
 						vid.description="";
 					}
 					content += '<div class="event-tooltip-content">'
-						+ '<div class="event-thumb"><a href="../cache/'+ vid.id +'_low.mp4"><img src="../cache/' + vid.id + '_thumb.jpg" height="100px"></a></div>'
+						+ '<div class="event-thumb"><img src="../cache/' + vid.id + '_thumb.jpg" height="100px" onclick="videoModal('+vid.id+')"></div>'
 									+ '<div class="event-name" style="color:' + vid.color + '">' + vid.name + '</div>'
 									+ '<div class="event-description">' + vid.description + '</div>';
 					if(Duration.valueOf()>3600000) {
@@ -154,8 +226,8 @@ $(function() {
 			if(e.events.length > 0) {
 				function callback(e){
    					return function(){
-						e.popover.trigger
-				        e.popover('hide');
+						//e.popover.trigger
+				        //e.popover('hide');
 			    	}
 				}
 			//	setTimeout(callback($(e.element)), 1000);
