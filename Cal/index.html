@@ -6,6 +6,11 @@
 		<link rel="stylesheet" type="text/css" href="./css/bootstrap-year-calendar.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="./css/style.css">
+
+		<link href="http://vjs.zencdn.net/6.2.5/video-js.css" rel="stylesheet">
+	    <!-- If you'd like to support IE8 -->
+  		<script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+
 		<link rel="stylesheet" type="text/css" href="cal.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="Content-Type" content="text/html; charset=utf-8" />
@@ -19,12 +24,17 @@
 
 <div id="myModal" class="modal">
   <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
-  <img class="modal-content" id="img01">
-  
+  <video id="modalVideo" class="video-js vjs-fluid modal-content" width="400px" controls preload="auto" data-setup="{}">
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a web browser that
+      <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    </p>
+  </video>
   <div id="modalname"></div>
   <div id="modaldesc"></div>
 </div>
 <script>
+	var myPlayer = videojs('modalVideo');
 
 // Get the <span> element that closes the modal
 function videoModal(id) {
@@ -38,10 +48,10 @@ function videoModal(id) {
 
 	console.log(m);
 	var modal = document.getElementById('myModal');
-	var modalImg = document.getElementById("img01");
-
+	var myPlayer = videojs('modalVideo');
+	myPlayer.src('../cache/'+id+'_med.mp4');
 	modal.style.display = "block";
-    modalImg.src = '../cache/'+id+'_thumb.jpg';
+	myPlayer.autoplay(true);
     document.getElementById("modalname").innerHTML = m.name;
     document.getElementById("modaldesc").innerHTML = m.description;
     desc=document.getElementById("modaldesc");	
@@ -55,10 +65,16 @@ var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() { 
-  modal.style.display = "none";
+	myPlayer=videojs('modalVideo');
+	myPlayer.pause();
+	myPlayer.autoplay(false);
+	
+	modal.style.display = "none";
 }
 $(this).on('keyup',function(evt) {
     if (evt.keyCode == 27) {
+	var myPlayer = videojs('modalVideo');
+	myPlayer.pause();		
   	modal.style.display = "none";
 	$(this).off('keyup');		// Disable keypress detection
     }
@@ -263,5 +279,6 @@ $(function() {
 	
 });
 </script>
+<script src="http://vjs.zencdn.net/6.2.5/video.js"></script>
 </body>
 </html>
