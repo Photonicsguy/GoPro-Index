@@ -24,7 +24,7 @@
 
 <div id="myModal" class="modal">
   <span class="close" onclick="document.getElementById('myModal').style.display='none'">&times;</span>
-  <video id="modalVideo" class="video-js vjs-fluid modal-content" width="400px" controls preload="auto" data-setup="{}">
+  <video id="modalVideo" class="video-js modal-content" widh="80%" height="500" controls preload="auto" data-setup="{}">
     <p class="vjs-no-js">
       To view this video please enable JavaScript, and consider upgrading to a web browser that
       <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
@@ -34,8 +34,6 @@
   <div id="modaldesc"></div>
 </div>
 <script>
-	var myPlayer = videojs('modalVideo');
-
 // Get the <span> element that closes the modal
 function videoModal(id) {
 //	var popover = document.getElementById('#popover');	
@@ -49,7 +47,7 @@ function videoModal(id) {
 	console.log(m);
 	var modal = document.getElementById('myModal');
 	var myPlayer = videojs('modalVideo');
-	myPlayer.src('../cache/'+id+'_med.mp4');
+	myPlayer.src('../cache/'+id+'_low.mp4');
 	modal.style.display = "block";
 	myPlayer.autoplay(true);
     document.getElementById("modalname").innerHTML = m.name;
@@ -126,6 +124,9 @@ $(function() {
                 $('#calendar').data('calendar').setDataSource(mydata.video);
 				$('#calendar').data('calendar').setMinDate(new Date(mydata.MinDate));
 				$('#calendar').data('calendar').setMaxDate(new Date(mydata.MaxDate));
+				// DEBUG
+				videoModal(1529);
+				
 				//delete mydata;
             },
 			error: function (xhr, ajaxOptions, thrownError) {
